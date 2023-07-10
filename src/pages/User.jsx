@@ -1,30 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserProfile } from "../utils/apiSlice";
 import MenuBar from "../components/MenuBar";
 import Footer from "../components/Footer";
 import Accounts from "../components/Accounts";
-import { getUserProfile } from "../utils/api";
 
 export default function User() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.api.user);
+  console.log(user);
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (token) {
-      getUserProfile(token)
-        .then((userData) => {
-          setUser(userData);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          navigate("/login");
-        });
-    } else {
-      navigate("/login");
+      dispatch(fetchUserProfile(token));
     }
-  }, [navigate]);
+  }, [dispatch]);
 
   return (
     <div>

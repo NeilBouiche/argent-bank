@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "../utils/api";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginAsync } from "../utils/apiSlice";
+import { useNavigate } from "react-router";
 
 export default function SignInForm() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,10 +12,16 @@ export default function SignInForm() {
   const handleLogin = (event) => {
     event.preventDefault();
 
-    login(email, password)
-      .then((token) => {
-        localStorage.setItem("token", token);
-        navigate("/user");
+    dispatch(loginAsync({ email, password }))
+      .then((payload) => {
+        const token = payload.payload;
+        if (token) {
+          localStorage.setItem("token", token);
+          navigate("/user");
+        } else {
+          localStorage.clear();
+          alert("L'utilisateur n'est pas dans la base de donnée");
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
