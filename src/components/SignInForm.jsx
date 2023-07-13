@@ -15,11 +15,10 @@ export default function SignInForm() {
     dispatch(loginAsync({ email, password }))
       .then((payload) => {
         const token = payload.payload;
+        console.log(payload);
         if (token) {
-          localStorage.setItem("token", token);
           navigate("/user");
         } else {
-          localStorage.clear();
           alert("L'utilisateur n'est pas dans la base de donnée");
         }
       })

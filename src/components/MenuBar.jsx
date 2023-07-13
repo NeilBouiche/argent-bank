@@ -3,8 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import apiSlice from "../utils/apiSlice";
 
 export default function MenuBar() {
+  const user = useSelector((state) => state.api.user);
+  const token = useSelector((state) => state.api.token);
+  const dispatch = useDispatch();
+
   return (
     <nav className="main-nav">
       <Link className="main-nav-logo" to="/">
@@ -16,10 +22,27 @@ export default function MenuBar() {
         <h1 className="sr-only">Argent Bank</h1>
       </Link>
       <div>
-        <Link className="main-nav-item" to="/sign-in">
-          <FontAwesomeIcon icon={faCircleUser} />
-          Sign In
-        </Link>
+        {token && user && user.firstName ? (
+          <div className="main-nav-item-container">
+            <Link className="main-nav-item" to="/user">
+              <FontAwesomeIcon icon={faCircleUser} />
+              <span className="main-nav-item-text">{user.firstName}</span>
+            </Link>
+            <Link
+              className="main-nav-item"
+              to="/"
+              onClick={() => dispatch(apiSlice.actions.disconnectUser())}
+            >
+              <FontAwesomeIcon icon={faRightFromBracket} />
+              <span className="main-nav-item-text">Sign Out</span>
+            </Link>
+          </div>
+        ) : (
+          <Link className="main-nav-item" to="/sign-in">
+            <FontAwesomeIcon icon={faCircleUser} />
+            <span className="main-nav-item-text">Sign In</span>
+          </Link>
+        )}
       </div>
     </nav>
   );

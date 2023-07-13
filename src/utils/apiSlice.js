@@ -22,8 +22,20 @@ const apiSlice = createSlice({
   initialState: {
     token: null,
     user: null,
+    loading: false,
   },
-  reducers: {},
+reducers: {
+  startLoading: (state) => {
+    state.loading = true;
+  },
+  stopLoading: (state) => {
+    state.loading = false;
+  },
+  disconnectUser: (state) => {
+    state.token = null;
+    state.user = null;
+  },
+},
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserProfile.fulfilled, (state, action) => {

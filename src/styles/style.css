@@ -54,7 +54,15 @@ body {
 
 .main-nav-item {
   text-decoration: none;
-  margin-right: 0.5rem;
+}
+
+.main-nav-item:last-child {
+  text-decoration: none;
+  margin-left: 1rem;
+}
+
+.main-nav-item-text {
+  margin-left: 0.2rem;
 }
 
 .main-nav-item:hover {
@@ -288,4 +296,23 @@ body {
   .transaction-button {
     width: 200px;
   }
+}
+
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
