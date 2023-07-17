@@ -19,7 +19,9 @@ export async function login(email, password) {
 
     if (response.ok) {
       const responseData = await response.json();
-      return responseData.body.token;
+      const token = responseData.body.token;
+      localStorage.setItem("token", token);
+      return token;    
     } else {
       throw new Error("Login failed");
     }
@@ -30,7 +32,8 @@ export async function login(email, password) {
 }
 
 // Function to fetch user profile
-export async function getUserProfile(token) {
+export async function getUserProfile() {
+  const token = localStorage.getItem("token");
   try {
     const response = await fetch(`${BASE_URL}/user/profile`, {
       method: "POST",
@@ -46,6 +49,36 @@ export async function getUserProfile(token) {
       return responseData.body;
     } else {
       throw new Error("Failed to fetch user profile");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+// function to update the user profile
+export async function updateUserProfile(token, firstName, lastName) {
+  const data = {
+    firstName: firstName,
+    lastName: lastName,
+  };
+
+  try {
+    const response = await fetch(`${BASE_URL}/user/profile`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      return responseData.body;
+    } else {
+      throw new Error("Failed to update user profile");
     }
   } catch (error) {
     console.error("Error:", error);

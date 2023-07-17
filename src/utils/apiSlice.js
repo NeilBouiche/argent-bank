@@ -1,8 +1,8 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getUserProfile, login } from "./api";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { getUserProfile, login } from './api';
 
 export const fetchUserProfile = createAsyncThunk(
-  "api/fetchUserProfile",
+  'api/fetchUserProfile',
   async (token) => {
     const response = await getUserProfile(token);
     return response;
@@ -10,7 +10,7 @@ export const fetchUserProfile = createAsyncThunk(
 );
 
 export const loginAsync = createAsyncThunk(
-  "api/login",
+  'api/login',
   async ({ email, password }) => {
     const response = await login(email, password);
     return response;
@@ -18,24 +18,29 @@ export const loginAsync = createAsyncThunk(
 );
 
 const apiSlice = createSlice({
-  name: "api",
+  name: 'api',
   initialState: {
+    email: '',
+    password: '',
     token: null,
-    user: null,
-    loading: false,
+    user: {},
   },
-reducers: {
-  startLoading: (state) => {
-    state.loading = true;
+  reducers: {
+    setToken: (state, action) => {
+      state.token = action.payload;
+    },
+    setEmail: (state, action) => {
+      state.email = action.payload;
+    },
+    setPassword: (state, action) => {
+      state.password = action.payload;
+    },
+    disconnectUser: (state) => {
+      localStorage.clear()
+      state.user = null;
+      state.token = null;
+    },
   },
-  stopLoading: (state) => {
-    state.loading = false;
-  },
-  disconnectUser: (state) => {
-    state.token = null;
-    state.user = null;
-  },
-},
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
@@ -46,5 +51,8 @@ reducers: {
       });
   },
 });
+
+export const { setEmail, setPassword, setToken, disconnectUser} =
+  apiSlice.actions;
 
 export default apiSlice.reducer;
