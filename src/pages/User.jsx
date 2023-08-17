@@ -1,36 +1,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserProfile, setToken } from '../utils/apiSlice';
+import { fetchUserProfile } from '../utils/apiSlice';
 import { toggleEditName, updateUserProfile } from '../utils/uiSlice';
 import MenuBar from '../components/MenuBar';
 import Footer from '../components/Footer';
 import Accounts from '../components/Accounts';
 import { useNavigate } from 'react-router';
 
-
 export default function User() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.api.user);
-  const token = useSelector((state) => state.api.token) || localStorage.getItem("token");
+  const token =
+    useSelector((state) => state.api.token) || localStorage.getItem('token');
   const isEditingName = useSelector((state) => state.ui.isEditingName);
-
-  useEffect(() => {}, [user]);
-
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    const firstName = document.querySelector('#firstName').value;
-    const lastName = document.querySelector('#lastName').value;
-    dispatch(
-      updateUserProfile({
-        token,
-        firstName,
-        lastName,
-      })
-    );
-    dispatch(fetchUserProfile(token));
-    dispatch(toggleEditName());
-  };
 
   useEffect(() => {
     if (token) {
@@ -40,6 +23,15 @@ export default function User() {
     }
   }, [dispatch, navigate, token]);
 
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    const firstName = document.querySelector('#firstName').value;
+    const lastName = document.querySelector('#lastName').value;
+    dispatch(updateUserProfile({ token, firstName, lastName })).then(() => {
+      dispatch(fetchUserProfile(token));
+    });
+    dispatch(toggleEditName());
+  };
   return (
     <div>
       <MenuBar />

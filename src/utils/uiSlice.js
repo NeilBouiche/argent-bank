@@ -1,15 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { updateUserProfile as updateUserProfileAPI } from './api';
+import { createGlobalStyle } from 'styled-components';
 
 export const updateUserProfile = createAsyncThunk(
   'api/updateUserProfile',
-  async ({ token, firstName, lastName }, thunkAPI) => {
-    try {
+  async ({ token, firstName, lastName }) => {
       const response = await updateUserProfileAPI(token, firstName, lastName);
       return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue({ error: error.message });
-    }
   }
 );
 
@@ -23,10 +20,6 @@ const uiSlice = createSlice({
   reducers: {
     toggleEditName(state) {
       state.isEditingName = !state.isEditingName;
-    },
-    updateUserProfile(state, action) {
-      state.firstName = action.payload.firstName;
-      state.lastName = action.payload.lastName;
     },
   },
   extraReducers: (builder) => {

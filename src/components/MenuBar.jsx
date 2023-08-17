@@ -4,11 +4,12 @@ import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {apiSlice, disconnectUser} from '../utils/apiSlice';
+import { disconnectUser } from '../utils/apiSlice';
 
 export default function MenuBar() {
   const user = useSelector((state) => state.api.user);
-  const token = useSelector((state) => state.api.token) || localStorage.getItem('token');
+  const token =
+    useSelector((state) => state.api.token) || localStorage.getItem('token');
   const dispatch = useDispatch();
 
   return (

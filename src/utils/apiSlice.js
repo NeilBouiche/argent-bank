@@ -1,14 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getUserProfile, login } from './api';
 
-export const fetchUserProfile = createAsyncThunk(
-  'api/fetchUserProfile',
-  async (token) => {
-    const response = await getUserProfile(token);
-    return response;
-  }
-);
-
 export const loginAsync = createAsyncThunk(
   'api/login',
   async ({ email, password }) => {
@@ -17,7 +9,15 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
-const apiSlice = createSlice({
+export const fetchUserProfile = createAsyncThunk(
+  'api/fetchUserProfile',
+  async (token) => {
+    const response = await getUserProfile(token);
+    return response;
+  }
+);
+
+export const apiSlice = createSlice({
   name: 'api',
   initialState: {
     email: '',
@@ -36,7 +36,7 @@ const apiSlice = createSlice({
       state.password = action.payload;
     },
     disconnectUser: (state) => {
-      localStorage.clear()
+      localStorage.clear();
       state.user = null;
       state.token = null;
     },
@@ -52,7 +52,7 @@ const apiSlice = createSlice({
   },
 });
 
-export const { setEmail, setPassword, setToken, disconnectUser} =
+export const { setEmail, setPassword, setToken, disconnectUser } =
   apiSlice.actions;
 
 export default apiSlice.reducer;
